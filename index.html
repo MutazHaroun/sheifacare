@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام إدارة عيادة الشفاء الطبية | Al-Shifa Clinic</title>
+  <!-- Google Fonts: Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-box">
+          <i class="fa-solid fa-heart-pulse logo-icon"></i>
+          <div class="logo-text">
+            <h2>عيادة <span>الشفاء</span></h2>
+            <p>نظام الإدارة الطبي الذكي</p>
+          </div>
+        </div>
+        <button class="mobile-toggle-btn" id="closeSidebarBtn" title="إغلاق القائمة">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">القائمة الرئيسية</div>
+        <ul class="nav-links">
+          <li>
+            <button class="nav-item active" data-page="dashboard">
+              <span class="nav-icon"><i class="fa-solid fa-chart-pie"></i></span>
+              <span class="nav-label">الرئيسية والإحصائيات</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-page="patients">
+              <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+              <span class="nav-label">إدارة المرضى</span>
+              <span class="badge badge-sky" id="patientsCountBadge">0</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-page="appointments">
+              <span class="nav-icon"><i class="fa-solid fa-calendar-check"></i></span>
+              <span class="nav-label">جدول المواعيد</span>
+              <span class="badge badge-pink" id="appointmentsTodayBadge">0</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-page="doctors">
+              <span class="nav-icon"><i class="fa-solid fa-user-doctor"></i></span>
+              <span class="nav-label">الكادر الطبي والأطباء</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-page="pharmacy">
+              <span class="nav-icon"><i class="fa-solid fa-pills"></i></span>
+              <span class="nav-label">إدارة الصيدلية والأدوية</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-page="invoices">
+              <span class="nav-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span>
+              <span class="nav-label">الفواتير والمدفوعات</span>
+              <span class="badge badge-sky" id="invoicesCountBadge">0</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="doctor-profile-card">
+          <div class="avatar">
+            <i class="fa-solid fa-user-tie"></i>
+          </div>
+          <div class="profile-info">
+            <h4>مدير النظام</h4>
+            <p>admin@alshifa-clinic.sd</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Navbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle-btn" id="openSidebarBtn" title="فتح القائمة">
+            <i class="fa-solid fa-bars-staggered"></i>
+          </button>
+          <div class="page-header-info">
+            <h1 id="currentPageTitle">لوحة التحكم</h1>
+            <p id="currentPageSubtitle">نظرة عامة على نشاط العيادة اليومي</p>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="live-clock" id="liveClock">
+            <i class="fa-regular fa-clock"></i>
+            <span id="timeString">--:--:--</span>
+          </div>
+
+          <button class="quick-add-btn" id="quickAddBtn" title="إجراء سريع">
+            <i class="fa-solid fa-circle-plus"></i>
+            <span>إضافة سريعة</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Pages Container -->
+      <div class="content-body">
+        
+        <!-- 1. DASHBOARD PAGE -->
+        <section class="page-view active" id="page-dashboard">
+          <div class="welcome-banner">
+            <div class="banner-text">
+              <h2>مرحبًا بك في لوحة تحكم العيادة 🌿</h2>
+              <p>نظام شامل لمتابعة المواعيد، المرضى، الأطباء، ومخزون الصيدلية بأعلى كفاءة وسهولة.</p>
+            </div>
+            <div class="banner-stats-row">
+              <div class="banner-stat-chip">
+                <i class="fa-solid fa-hospital-user"></i>
+                <span>خدمة متميزة</span>
+              </div>
+              <div class="banner-stat-chip">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>سجلات آمنة</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Stats Cards -->
+          <div class="stats-grid">
+            <div class="stat-card stat-sky" onclick="navigateTo('patients')">
+              <div class="stat-icon-wrapper">
+                <i class="fa-solid fa-users"></i>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">إجمالي المرضى</span>
+                <h3 class="stat-number" id="dashTotalPatients">0</h3>
+                <span class="stat-hint"><i class="fa-solid fa-arrow-trend-up"></i> سجلات مفعلة</span>
+              </div>
+            </div>
+
+            <div class="stat-card stat-pink" onclick="navigateTo('appointments')">
+              <div class="stat-icon-wrapper">
+                <i class="fa-solid fa-calendar-day"></i>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">مواعيد اليوم</span>
+                <h3 class="stat-number" id="dashTodayAppointments">0</h3>
+                <span class="stat-hint"><i class="fa-solid fa-clock"></i> جدول اليوم</span>
+              </div>
+            </div>
+
+            <div class="stat-card stat-sky" onclick="navigateTo('doctors')">
+              <div class="stat-icon-wrapper">
+                <i class="fa-solid fa-user-doctor"></i>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">الأطباء المتاحون</span>
+                <h3 class="stat-number" id="dashActiveDoctors">0</h3>
+                <span class="stat-hint"><i class="fa-solid fa-stethoscope"></i> جاهزون للاستقبال</span>
+              </div>
+            </div>
+
+            <div class="stat-card stat-pink" onclick="navigateTo('pharmacy')">
+              <div class="stat-icon-wrapper">
+                <i class="fa-solid fa-prescription-bottle-medical"></i>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">الأدوية في الصيدلية</span>
+                <h3 class="stat-number" id="dashTotalMeds">0</h3>
+                <span class="stat-hint"><i class="fa-solid fa-box-archive"></i> صنف دوائي</span>
+              </div>
+            </div>
+
+            <div class="stat-card stat-sky" onclick="navigateTo('invoices')">
+              <div class="stat-icon-wrapper">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">إجمالي التحصيل</span>
+                <h3 class="stat-number" id="dashTotalRevenue">0 ج.س</h3>
+                <span class="stat-hint"><i class="fa-solid fa-receipt"></i> إيرادات الفواتير (SDG)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard Row: Latest Appointments & Low Stock Alerts -->
+          <div class="dashboard-widgets-grid">
+            <div class="custom-card widget-card">
+              <div class="card-header-bar">
+                <div class="title-with-icon">
+                  <i class="fa-solid fa-calendar-check color-sky"></i>
+                  <h3>أحدث المواعيد المحجوزة</h3>
+                </div>
+                <button class="text-link-btn" onclick="navigateTo('appointments')">عرض الكل &larr;</button>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>المريض</th>
+                      <th>الطبيب</th>
+                      <th>التاريخ والوقت</th>
+                      <th>الحالة</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashLatestAppointmentsList">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="custom-card widget-card">
+              <div class="card-header-bar">
+                <div class="title-with-icon">
+                  <i class="fa-solid fa-triangle-exclamation color-pink"></i>
+                  <h3>تنبيهات الصيدلية والمخزون</h3>
+                </div>
+                <button class="text-link-btn" onclick="navigateTo('pharmacy')">إدارة الصيدلية &larr;</button>
+              </div>
+              <div id="dashPharmacyAlertsList" class="alerts-list">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. PATIENTS PAGE (صفحة المرضى 👥) -->
+        <section class="page-view" id="page-patients">
+          <div class="action-bar-card">
+            <div class="search-filter-group">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="patientSearchInput" placeholder="البحث باسم المريض أو الهاتف..." oninput="filterPatients()">
+              </div>
+              <select id="patientGenderFilter" class="filter-select" onchange="filterPatients()">
+                <option value="all">جميع الحالات / الجنس</option>
+                <option value="ذكر">ذكر</option>
+                <option value="أنثى">أنثى</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="openAddPatientModal()">
+              <i class="fa-solid fa-user-plus"></i>
+              <span>إضافة مريض جديد</span>
+            </button>
+          </div>
+
+          <div class="custom-card main-table-card">
+            <div class="card-header-bar">
+              <div class="title-with-icon">
+                <i class="fa-solid fa-users color-sky"></i>
+                <h3>قائمة المرضى المسجلين</h3>
+              </div>
+              <span class="count-pill" id="patientsFilteredCount">0 مريض</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>اسم المريض</th>
+                    <th>العمر</th>
+                    <th>الجنس</th>
+                    <th>رقم الهاتف</th>
+                    <th>فصيلة الدم</th>
+                    <th>التشخيص / الملاحظات</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="patientsTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. APPOINTMENTS PAGE (صفحة المواعيد 📅) -->
+        <section class="page-view" id="page-appointments">
+          <div class="action-bar-card">
+            <div class="search-filter-group">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="appointmentSearchInput" placeholder="بحث باسم المريض أو الطبيب..." oninput="filterAppointments()">
+              </div>
+              <select id="appointmentStatusFilter" class="filter-select" onchange="filterAppointments()">
+                <option value="all">جميع الحالات</option>
+                <option value="مؤكد">مؤكد</option>
+                <option value="في الانتظار">في الانتظار</option>
+                <option value="مكتمل">مكتمل</option>
+                <option value="ملغي">ملغي</option>
+              </select>
+              <input type="date" id="appointmentDateFilter" class="filter-input-date" onchange="filterAppointments()">
+            </div>
+            <button class="btn btn-primary" onclick="openAddAppointmentModal()">
+              <i class="fa-solid fa-calendar-plus"></i>
+              <span>إضافة موعد جديد</span>
+            </button>
+          </div>
+
+          <div class="custom-card main-table-card">
+            <div class="card-header-bar">
+              <div class="title-with-icon">
+                <i class="fa-solid fa-calendar-check color-sky"></i>
+                <h3>جدول المواعيد والحجوزات</h3>
+              </div>
+              <span class="count-pill" id="appointmentsFilteredCount">0 موعد</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>اسم المريض</th>
+                    <th>الطبيب المعالج</th>
+                    <th>التاريخ</th>
+                    <th>الوقت</th>
+                    <th>سبب الزيارة</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="appointmentsTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. DOCTORS PAGE (صفحة الأطباء 👨‍⚕️) -->
+        <section class="page-view" id="page-doctors">
+          <div class="action-bar-card">
+            <div class="search-filter-group">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="doctorSearchInput" placeholder="البحث باسم الطبيب أو التخصص..." oninput="filterDoctors()">
+              </div>
+              <select id="doctorSpecialtyFilter" class="filter-select" onchange="filterDoctors()">
+                <option value="all">جميع التخصصات</option>
+                <option value="طب الأطفال">طب الأطفال</option>
+                <option value="طب الأسنان">طب الأسنان</option>
+                <option value="طب الباطنية">طب الباطنية</option>
+                <option value="طب القلب والأوعية">طب القلب والأوعية</option>
+                <option value="طب العيون">طب العيون</option>
+                <option value="طب العظام">طب العظام</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="openAddDoctorModal()">
+              <i class="fa-solid fa-user-doctor"></i>
+              <span>إضافة طبيب جديد</span>
+            </button>
+          </div>
+
+          <div class="doctors-grid" id="doctorsGrid">
+            <!-- Doctor cards generated dynamically -->
+          </div>
+        </section>
+
+        <!-- 5. PHARMACY PAGE (صفحة الصيدلية 💊) -->
+        <section class="page-view" id="page-pharmacy">
+          <div class="action-bar-card">
+            <div class="search-filter-group">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="medSearchInput" placeholder="البحث باسم الدواء أو التصنيف..." oninput="filterMedications()">
+              </div>
+              <select id="medCategoryFilter" class="filter-select" onchange="filterMedications()">
+                <option value="all">جميع التصنيفات</option>
+                <option value="مسكنات وخافض حرارة">مسكنات وخافض حرارة</option>
+                <option value="مضادات حيوية">مضادات حيوية</option>
+                <option value="فيتامينات ومكملات">فيتامينات ومكملات</option>
+                <option value="أدوية مزمنة">أدوية مزمنة</option>
+                <option value="مراهم ومطهرات">مراهم ومطهرات</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="openAddMedicationModal()">
+              <i class="fa-solid fa-circle-plus"></i>
+              <span>إضافة دواء جديد</span>
+            </button>
+          </div>
+
+          <div class="custom-card main-table-card">
+            <div class="card-header-bar">
+              <div class="title-with-icon">
+                <i class="fa-solid fa-pills color-sky"></i>
+                <h3>مخزون الأدوية والمستلزمات</h3>
+              </div>
+              <span class="count-pill" id="medsFilteredCount">0 صنف</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>اسم الدواء</th>
+                    <th>التصنيف</th>
+                    <th>الكمية المتوفرة</th>
+                    <th>السعر</th>
+                    <th>تاريخ الانتهاء</th>
+                    <th>حالة المخزون</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="medsTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. INVOICES PAGE (صفحة الفواتير والمدفوعات 💳) -->
+        <section class="page-view" id="page-invoices">
+          <!-- Summary Cards Row -->
+          <div class="invoices-summary-grid">
+            <div class="summary-mini-card stat-sky">
+              <div class="summary-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+              <div class="summary-info">
+                <span>إجمالي المطالبات</span>
+                <h4 id="invoicesTotalBilled">0.00 ج.س</h4>
+              </div>
+            </div>
+            <div class="summary-mini-card stat-success">
+              <div class="summary-icon"><i class="fa-solid fa-circle-check"></i></div>
+              <div class="summary-info">
+                <span>إجمالي المدفوع والمحصّل</span>
+                <h4 id="invoicesTotalCollected">0.00 ج.س</h4>
+              </div>
+            </div>
+            <div class="summary-mini-card stat-pink">
+              <div class="summary-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+              <div class="summary-info">
+                <span>المبالغ المتبقية / المعلقة</span>
+                <h4 id="invoicesTotalPending">0.00 ج.س</h4>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-bar-card">
+            <div class="search-filter-group">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="invoiceSearchInput" placeholder="بحث برقم الفاتورة، المريض، أو الطبيب..." oninput="filterInvoices()">
+              </div>
+              <select id="invoiceStatusFilter" class="filter-select" onchange="filterInvoices()">
+                <option value="all">جميع حالات الدفع</option>
+                <option value="مدفوع">مدفوع بالكامل</option>
+                <option value="مدفوع جزئياً">مدفوع جزئياً</option>
+                <option value="غير مدفوع">غير مدفوع</option>
+              </select>
+              <select id="invoiceMethodFilter" class="filter-select" onchange="filterInvoices()">
+                <option value="all">جميع طرق الدفع</option>
+                <option value="نقدي">نقدي (كاش)</option>
+                <option value="بطاقة مصرفية">بطاقة مصرفية</option>
+                <option value="تحويل بنكي">تحويل بنكي / سداد</option>
+                <option value="تأمين صحي">تأمين صحي</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="openAddInvoiceModal()">
+              <i class="fa-solid fa-plus-circle"></i>
+              <span>إنشاء فاتورة جديدة</span>
+            </button>
+          </div>
+
+          <div class="custom-card main-table-card">
+            <div class="card-header-bar">
+              <div class="title-with-icon">
+                <i class="fa-solid fa-receipt color-sky"></i>
+                <h3>سجل الفواتير والحسابات</h3>
+              </div>
+              <span class="count-pill" id="invoicesFilteredCount">0 فاتورة</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>رقم الفاتورة</th>
+                    <th>المريض</th>
+                    <th>الطبيب المعالج</th>
+                    <th>التاريخ</th>
+                    <th>إجمالي المبلغ</th>
+                    <th>المبلغ المدفوع</th>
+                    <th>المتبقي</th>
+                    <th>طريقة الدفع</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="invoicesTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- App Footer -->
+      <footer class="app-footer">
+        <div class="footer-container">
+          <div class="footer-right">
+            <div class="footer-logo">
+              <i class="fa-solid fa-heart-pulse logo-icon-sm"></i>
+              <span>عيادة الشفاء <strong>الطبية الذكية</strong></span>
+            </div>
+            <span class="footer-badge">الإصدار 2.0</span>
+          </div>
+          <div class="footer-center">
+            <p class="footer-signature">
+              <i class="fa-solid fa-heart-pulse color-sky"></i>
+              <span>عيادة الشفاء 2026 &copy;</span>
+            </p>
+          </div>
+          <div class="footer-left">
+            <span class="footer-status-indicator">
+              <span class="pulse-dot"></span>
+              النظام متصل ومحدث
+            </span>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- Patient Modal (Add / Edit) -->
+  <div class="modal-backdrop" id="patientModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="patientModalTitle"><i class="fa-solid fa-user-plus color-sky"></i> إضافة مريض جديد</h3>
+        <button class="modal-close-btn" onclick="closeModal('patientModal')">&times;</button>
+      </div>
+      <form id="patientForm" onsubmit="handlePatientSubmit(event)">
+        <input type="hidden" id="patientId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="patientName">اسم المريض الكامل <span class="req">*</span></label>
+            <input type="text" id="patientName" required placeholder="مثال: أحمد محمد علي">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="patientAge">العمر (سنوات) <span class="req">*</span></label>
+              <input type="number" id="patientAge" min="0" max="130" required placeholder="30">
+            </div>
+            <div class="form-group">
+              <label for="patientGender">الجنس <span class="req">*</span></label>
+              <select id="patientGender" required>
+                <option value="ذكر">ذكر</option>
+                <option value="أنثى">أنثى</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="patientPhone">رقم الهاتف <span class="req">*</span></label>
+              <input type="tel" id="patientPhone" required placeholder="09xxxxxxxx">
+            </div>
+            <div class="form-group">
+              <label for="patientBlood">فصيلة الدم</label>
+              <select id="patientBlood">
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="غير محدد">غير محدد</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="patientNotes">التشخيص / ملاحظات طبية</label>
+            <textarea id="patientNotes" rows="3" placeholder="أدخل أي ملاحظات طبية أو أمراض سابقة..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('patientModal')">إلغاء</button>
+          <button type="submit" class="btn btn-primary" id="patientSubmitBtn">حفظ المريض</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Appointment Modal (Add / Edit) -->
+  <div class="modal-backdrop" id="appointmentModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="appointmentModalTitle"><i class="fa-solid fa-calendar-plus color-sky"></i> حجز موعد جديد</h3>
+        <button class="modal-close-btn" onclick="closeModal('appointmentModal')">&times;</button>
+      </div>
+      <form id="appointmentForm" onsubmit="handleAppointmentSubmit(event)">
+        <input type="hidden" id="appointmentId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="appPatientSelect">اختيار المريض <span class="req">*</span></label>
+            <select id="appPatientSelect" required>
+              <!-- Filled dynamically from patient list -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="appDoctorSelect">اختيار الطبيب <span class="req">*</span></label>
+            <select id="appDoctorSelect" required>
+              <!-- Filled dynamically from doctor list -->
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="appDate">تحديد التاريخ <span class="req">*</span></label>
+              <input type="date" id="appDate" required>
+            </div>
+            <div class="form-group">
+              <label for="appTime">تحديد الوقت <span class="req">*</span></label>
+              <input type="time" id="appTime" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="appReason">سبب الموعد / الكشف</label>
+              <input type="text" id="appReason" placeholder="مثال: فحص دوري، متابعة علاج...">
+            </div>
+            <div class="form-group">
+              <label for="appStatus">حالة الموعد</label>
+              <select id="appStatus">
+                <option value="مؤكد">مؤكد</option>
+                <option value="في الانتظار">في الانتظار</option>
+                <option value="مكتمل">مكتمل</option>
+                <option value="ملغي">ملغي</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('appointmentModal')">إلغاء</button>
+          <button type="submit" class="btn btn-primary" id="appointmentSubmitBtn">حفظ الموعد</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Doctor Modal (Add / Edit) -->
+  <div class="modal-backdrop" id="doctorModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="doctorModalTitle"><i class="fa-solid fa-user-doctor color-sky"></i> إضافة طبيب جديد</h3>
+        <button class="modal-close-btn" onclick="closeModal('doctorModal')">&times;</button>
+      </div>
+      <form id="doctorForm" onsubmit="handleDoctorSubmit(event)">
+        <input type="hidden" id="doctorId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="docName">اسم الطبيب <span class="req">*</span></label>
+            <input type="text" id="docName" required placeholder="مثال: د. محمد خالد">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="docSpecialty">التخصص <span class="req">*</span></label>
+              <select id="docSpecialty" required>
+                <option value="طب الأطفال">طب الأطفال</option>
+                <option value="طب الأسنان">طب الأسنان</option>
+                <option value="طب الباطنية">طب الباطنية</option>
+                <option value="طب القلب والأوعية">طب القلب والأوعية</option>
+                <option value="طب العيون">طب العيون</option>
+                <option value="طب العظام">طب العظام</option>
+                <option value="طب الجلدية">طب الجلدية</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="docStatus">الحالة الحالية</label>
+              <select id="docStatus">
+                <option value="متاح اليوم">متاح اليوم</option>
+                <option value="في غرفة الكشف">في غرفة الكشف</option>
+                <option value="في إجازة">في إجازة</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="docPhone">رقم الهاتف <span class="req">*</span></label>
+              <input type="tel" id="docPhone" required placeholder="09xxxxxxxx">
+            </div>
+            <div class="form-group">
+              <label for="docRoom">رقم العيادة / الغرفة</label>
+              <input type="text" id="docRoom" placeholder="عيادة رقم 3">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="docSchedule">مواعيد الدوام الأسبوعي</label>
+            <input type="text" id="docSchedule" placeholder="مثال: الأحد إلى الخميس (9:00 ص - 3:00 م)">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('doctorModal')">إلغاء</button>
+          <button type="submit" class="btn btn-primary" id="doctorSubmitBtn">حفظ بيانات الطبيب</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Medication Modal (Add / Edit) -->
+  <div class="modal-backdrop" id="medicationModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="medModalTitle"><i class="fa-solid fa-pills color-sky"></i> إضافة دواء إلى الصيدلية</h3>
+        <button class="modal-close-btn" onclick="closeModal('medicationModal')">&times;</button>
+      </div>
+      <form id="medicationForm" onsubmit="handleMedicationSubmit(event)">
+        <input type="hidden" id="medId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="medName">اسم الدواء <span class="req">*</span></label>
+            <input type="text" id="medName" required placeholder="مثال: باراسيتامول 500mg">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="medCategory">التصنيف <span class="req">*</span></label>
+              <select id="medCategory" required>
+                <option value="مسكنات وخافض حرارة">مسكنات وخافض حرارة</option>
+                <option value="مضادات حيوية">مضادات حيوية</option>
+                <option value="فيتامينات ومكملات">فيتامينات ومكملات</option>
+                <option value="أدوية مزمنة">أدوية مزمنة</option>
+                <option value="مراهم ومطهرات">مراهم ومطهرات</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="medQuantity">الكمية المتوفرة <span class="req">*</span></label>
+              <input type="number" id="medQuantity" min="0" required placeholder="100">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="medPrice">السعر (جنيه سوداني - ج.س) <span class="req">*</span></label>
+              <input type="number" step="50" id="medPrice" min="0" required placeholder="3500">
+            </div>
+            <div class="form-group">
+              <label for="medExpiry">تاريخ الانتهاء <span class="req">*</span></label>
+              <input type="date" id="medExpiry" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('medicationModal')">إلغاء</button>
+          <button type="submit" class="btn btn-primary" id="medSubmitBtn">حفظ الدواء</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Invoice Modal (Add / Edit) -->
+  <div class="modal-backdrop" id="invoiceModal">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3 id="invoiceModalTitle"><i class="fa-solid fa-file-invoice-dollar color-sky"></i> إنشاء فاتورة جديدة</h3>
+        <button class="modal-close-btn" onclick="closeModal('invoiceModal')">&times;</button>
+      </div>
+      <form id="invoiceForm" onsubmit="handleInvoiceSubmit(event)">
+        <input type="hidden" id="invoiceId">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="invNumber">رقم الفاتورة <span class="req">*</span></label>
+              <input type="text" id="invNumber" required readonly class="input-readonly">
+            </div>
+            <div class="form-group">
+              <label for="invDate">تاريخ الفاتورة <span class="req">*</span></label>
+              <input type="date" id="invDate" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="invPatientSelect">المريض <span class="req">*</span></label>
+              <select id="invPatientSelect" required>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="invDoctorSelect">الطبيب المعالج <span class="req">*</span></label>
+              <select id="invDoctorSelect" required>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="invPaymentMethod">طريقة الدفع <span class="req">*</span></label>
+              <select id="invPaymentMethod" required>
+                <option value="نقدي">نقدي (كاش)</option>
+                <option value="بطاقة مصرفية">بطاقة مصرفية</option>
+                <option value="تحويل بنكي">تحويل بنكي / سداد</option>
+                <option value="تأمين صحي">تأمين صحي</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="invQuickItemSelect">إضافة سريعة لخدمة / دواء</label>
+              <select id="invQuickItemSelect" onchange="handleQuickItemAdd(this.value)">
+                <option value="">-- اختر للإضافة السريعة --</option>
+                <optgroup label="🩺 خدمات وكشوفات العيادة">
+                  <option value="كشفية عامة|1|15000">كشفية عامة (15,000 ج.س)</option>
+                  <option value="استشارة تخصصية|1|25000">استشارة تخصصية (25,000 ج.س)</option>
+                  <option value="جلسة علاج وتنظيف أسنان|1|40000">جلسة علاج وتنظيف أسنان (40,000 ج.س)</option>
+                  <option value="فحص نظر وقياس درجات|1|12000">فحص نظر وقياس درجات (12,000 ج.س)</option>
+                  <option value="تخطيط قلب ECG|1|20000">تخطيط قلب ECG (20,000 ج.س)</option>
+                  <option value="فحص مخبري شامل|1|30000">فحص مخبري شامل (30,000 ج.س)</option>
+                  <option value="تضميد وغيار جروح|1|8000">تضميد وغيار جروح (8,000 ج.س)</option>
+                </optgroup>
+                <optgroup label="💊 أدوية من الصيدلية" id="invPharmacyOptGroup">
+                  <!-- Populated dynamically from pharmacy -->
+                </optgroup>
+              </select>
+            </div>
+          </div>
+
+          <!-- Invoice Line Items Table -->
+          <div class="invoice-items-section">
+            <div class="items-section-header">
+              <h4><i class="fa-solid fa-list-check color-sky"></i> بنود الفاتورة والخدمات</h4>
+              <button type="button" class="btn btn-outline-sm" onclick="addInvoiceItemRow()">
+                <i class="fa-solid fa-plus"></i> إضافة بند مخصص
+              </button>
+            </div>
+
+            <div class="items-table-wrapper">
+              <table class="items-table" id="invoiceItemsTable">
+                <thead>
+                  <tr>
+                    <th style="width: 45%;">الوصف / الخدمة / الدواء</th>
+                    <th style="width: 15%;">الكمية</th>
+                    <th style="width: 20%;">سعر الوحدة</th>
+                    <th style="width: 15%;">الإجمالي</th>
+                    <th style="width: 5%;"></th>
+                  </tr>
+                </thead>
+                <tbody id="invoiceItemsBody">
+                  <!-- Dynamic Item Rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Financial Calculation Summary Box -->
+          <div class="invoice-calc-box">
+            <div class="calc-row">
+              <span>المجموع الفرعي:</span>
+              <span class="calc-val" id="invSubtotalText">0.00 ج.س</span>
+            </div>
+            <div class="calc-row">
+              <label for="invDiscount">الخصم:</label>
+              <div class="input-with-suffix">
+                <input type="number" id="invDiscount" min="0" step="50" value="0" oninput="calculateInvoiceTotals()">
+                <span class="suffix">ج.س</span>
+              </div>
+            </div>
+            <div class="calc-row">
+              <label for="invTax">الضريبة (%):</label>
+              <div class="input-with-suffix">
+                <input type="number" id="invTax" min="0" max="100" step="1" value="0" oninput="calculateInvoiceTotals()">
+                <span class="suffix">%</span>
+              </div>
+            </div>
+            <div class="calc-row total-highlight">
+              <span>المبلغ الإجمالي الصافي:</span>
+              <span class="calc-val" id="invNetTotalText">0.00 ج.س</span>
+            </div>
+            <div class="calc-row">
+              <label for="invPaidAmount">المبلغ المدفوع:</label>
+              <div class="input-with-suffix">
+                <input type="number" id="invPaidAmount" min="0" step="50" value="0" oninput="calculateInvoiceTotals()" required>
+                <span class="suffix">ج.س</span>
+              </div>
+            </div>
+            <div class="calc-row remaining-row">
+              <span>المبلغ المتبقي:</span>
+              <span class="calc-val" id="invRemainingText">0.00 ج.س</span>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 1rem;">
+            <label for="invNotes">ملاحظات الفاتورة / شروط إضافية</label>
+            <textarea id="invNotes" rows="2" placeholder="أي ملاحظات خاصة بطريقة الدفع، التأمين، أو المتابعة..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('invoiceModal')">إلغاء</button>
+          <button type="submit" class="btn btn-primary" id="invoiceSubmitBtn">حفظ الفاتورة</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Print / View Invoice Modal -->
+  <div class="modal-backdrop" id="printInvoiceModal">
+    <div class="modal-card modal-lg printable-modal">
+      <div class="modal-header no-print">
+        <h3 id="printModalHeaderTitle"><i class="fa-solid fa-receipt color-sky"></i> عرض وطباعة الفاتورة</h3>
+        <div class="header-action-btns">
+          <button type="button" class="btn btn-primary btn-sm" onclick="printCurrentInvoice()">
+            <i class="fa-solid fa-print"></i> طباعة الفاتورة
+          </button>
+          <button class="modal-close-btn" onclick="closeModal('printInvoiceModal')">&times;</button>
+        </div>
+      </div>
+      
+      <!-- Printable Invoice Document Sheet -->
+      <div class="modal-body invoice-sheet" id="printableInvoiceDocument">
+        <!-- Generated Dynamically -->
+      </div>
+
+      <div class="modal-footer no-print">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('printInvoiceModal')">إغلاق</button>
+        <button type="button" class="btn btn-primary" onclick="printCurrentInvoice()">
+          <i class="fa-solid fa-print"></i> أمر الطباعة
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Details Modal (for Patients/Doctors/Appointments) -->
+  <div class="modal-backdrop" id="viewDetailsModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="viewDetailsTitle"><i class="fa-solid fa-circle-info color-sky"></i> تفاصيل السجل</h3>
+        <button class="modal-close-btn" onclick="closeModal('viewDetailsModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="viewDetailsContent">
+        <!-- Filled dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="closeModal('viewDetailsModal')">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
